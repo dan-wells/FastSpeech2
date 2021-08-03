@@ -58,11 +58,14 @@ def get_vocoder(config, device):
         with open("hifigan/config.json", "r") as f:
             config = json.load(f)
         config = hifigan.AttrDict(config)
-        vocoder = hifigan.Generator(config)
         if speaker == "LJSpeech":
             ckpt = torch.load("hifigan/generator_LJSpeech.pth.tar")
         elif speaker == "universal":
             ckpt = torch.load("hifigan/generator_universal.pth.tar")
+        elif speaker == "mary_ann":
+            ckpt = torch.load("hifigan/generator_mary_ann_50k.pth.tar")
+            config["sampling_rate"] = 16000
+        vocoder = hifigan.Generator(config)
         vocoder.load_state_dict(ckpt["generator"])
         vocoder.eval()
         vocoder.remove_weight_norm()
