@@ -19,6 +19,7 @@ class Preprocessor:
         self.in_dir = config["path"]["raw_path"]
         self.out_dir = config["path"]["preprocessed_path"]
         self.val_size = config["preprocessing"]["val_size"]
+        self.seed = config["preprocessing"]["seed"]
         self.sampling_rate = config["preprocessing"]["audio"]["sampling_rate"]
         self.hop_length = config["preprocessing"]["stft"]["hop_length"]
 
@@ -139,6 +140,7 @@ class Preprocessor:
             )
         )
 
+        random.seed(self.seed)
         random.shuffle(out)
         out = [r for r in out if r is not None]
 
