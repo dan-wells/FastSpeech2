@@ -1,4 +1,5 @@
 dataset: "LJSpeech"
+num_utts: 13100
 
 path:
   corpus_path: "/home/ming/Data/LJSpeech-1.1"

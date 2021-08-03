@@ -18,6 +18,7 @@ class Preprocessor:
         self.config = config
         self.in_dir = config["path"]["raw_path"]
         self.out_dir = config["path"]["preprocessed_path"]
+        self.num_utts = config["num_utts"]
         self.val_size = config["preprocessing"]["val_size"]
         self.seed = config["preprocessing"]["seed"]
         self.sampling_rate = config["preprocessing"]["audio"]["sampling_rate"]
@@ -65,7 +66,8 @@ class Preprocessor:
 
         # Compute pitch, energy, duration, and mel-spectrogram
         speakers = {}
-        for i, speaker in enumerate(tqdm(os.listdir(self.in_dir))):
+        wav_counter = tqdm(range(self.num_utts), desc="Utterances", position=0)
+        for i, speaker in enumerate(tqdm(os.listdir(self.in_dir), desc="Speakers", position=1)):
             speakers[speaker] = i
             for wav_name in os.listdir(os.path.join(self.in_dir, speaker)):
                 if ".wav" not in wav_name:
@@ -89,6 +91,7 @@ class Preprocessor:
                     energy_scaler.partial_fit(energy.reshape((-1, 1)))
 
                 n_frames += n
+                wav_counter.update(1)
 
         print("Computing statistic quantities ...")
         # Perform normalization if necessary
